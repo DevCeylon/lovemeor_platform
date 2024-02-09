@@ -14,7 +14,7 @@ const Footer = () => {
           />
         </Link>
 
-        <p> 2024 Lovemeor. All Rights reverved.</p>
+        <p> 2024 Devinda Rukshan. All Rights reverved.</p>
       </div>
     </footer>
   )
