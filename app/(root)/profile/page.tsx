@@ -1,7 +1,7 @@
 import Collection from '@/components/shared/Collection'
 import { Button } from '@/components/ui/button'
 import { getEventsByUser } from '@/lib/actions/event.actions'
-// import { getOrdersByUser } from '@/lib/actions/order.actions'
+import { getOrdersByUser } from '@/lib/actions/order.actions'
 import { IOrder } from '@/lib/database/models/order.model'
 import { SearchParamProps } from '@/types'
 import { auth } from '@clerk/nextjs'
@@ -15,37 +15,39 @@ const ProfilePage = async ({ searchParams }: SearchParamProps) => {
   const ordersPage = Number(searchParams?.ordersPage) || 1;
   const eventsPage = Number(searchParams?.eventsPage) || 1;
 
-//   const orders = await getOrdersByUser({ userId, page: ordersPage})
+  const orders = await getOrdersByUser({ userId, page: 1})
 
-//   const orderedEvents = orders?.data.map((order: IOrder) => order.event) || [];
-  const organizedEvents = await getEventsByUser({ userId, page: eventsPage })
+  const orderedEvents = orders?.data.map((order: IOrder) => order.event) || [];
+  const organizedEvents = await getEventsByUser({ userId, page: 1 })
+
+  console.log({orderedEvents})
 
   return (
     <>
       {/* My Tickets */}
       <section className="bg-primary-50 bg-dotted-pattern bg-cover bg-center py-5 md:py-10">
         <div className="wrapper flex items-center justify-center sm:justify-between">
-          <h3 className='h3-bold text-center sm:text-left'>Pets Under My Wings</h3>
+          <h3 className='h3-bold text-center sm:text-left'>My Tickets</h3>
           <Button asChild size="lg" className="button hidden sm:flex">
             <Link href="/#events">
-              Take Care Another Pets
+              Explore More Events
             </Link>
           </Button>
         </div>
       </section>
 
-      {/* <section className="wrapper my-8">
+      <section className="wrapper my-8">
         <Collection 
           data={orderedEvents}
-          emptyTitle="No Pets yet"
-          emptyStateSubtext="No worries - plenty of pets to take care!"
+          emptyTitle="No event tickets purchased yet"
+          emptyStateSubtext="No worries - plenty of exciting events to explore!"
           collectionType="My_Tickets"
           limit={3}
           page={ordersPage}
           urlParamName="ordersPage"
           totalPages={orders?.totalPages}
         />
-      </section> */}
+      </section>
 
       {/* Events Organized */}
       <section className="bg-primary-50 bg-dotted-pattern bg-cover bg-center py-5 md:py-10">
@@ -53,21 +55,17 @@ const ProfilePage = async ({ searchParams }: SearchParamProps) => {
           <h3 className='h3-bold text-center sm:text-left'>Events Organized</h3>
           <Button asChild size="lg" className="button hidden sm:flex">
             <Link href="/events/create">
-                Only for authorized representatives
+              Create New Event
             </Link>
           </Button>
-          
-        </div>
-        <div>
-            <p className="wrapper flex items-center justify-center sm:justify-between p-bold-20 text-red-600">Please note that this area is exclusively for owners or authorized representatives of animal care facilities. We conduct thorough verifications of all entries and will revoke access for individuals not meeting these criteria. Your cooperation in ensuring the integrity of our platform is greatly appreciated.</p>
         </div>
       </section>
 
       <section className="wrapper my-8">
         <Collection 
           data={organizedEvents?.data}
-          emptyTitle="Not have been created yet"
-          emptyStateSubtext="Go and care some pet now"
+          emptyTitle="No events have been created yet"
+          emptyStateSubtext="Go create some now"
           collectionType="Events_Organized"
           limit={3}
           page={eventsPage}
